@@ -1,5 +1,4 @@
-// Logo downloaded from: https://icon-icons.com/icon/cat/138789
-import logo from "./logo.svg";
+import logo from "images/logo.svg";
 import "./App.css";
 
 function App() {
