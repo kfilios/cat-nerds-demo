@@ -1,17 +1,16 @@
 import { Outlet } from "react-router-dom";
-import "./LayoutView.css";
 
-import logo from "images/logo.svg";
+import { Navbar } from "components";
 
 function LayoutView() {
-	return (
-		<div className="App">
-			<header className="App-header">
-				<img src={logo} className="App-logo" alt="logo" />
-			</header>
-			<Outlet />
-		</div>
-	);
+  return (
+    <div className="flex h-screen min-h-screen flex-col bg-slate-800 px-4">
+      <Navbar />
+      <div className="mx-auto mt-2 w-full max-w-screen-xl flex-grow rounded-t-lg bg-white p-10">
+        <Outlet />
+      </div>
+    </div>
+  );
 }
 
 export default LayoutView;
