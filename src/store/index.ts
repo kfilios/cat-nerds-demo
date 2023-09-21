@@ -18,7 +18,10 @@ const store = configureStore({
 		settings: settingsReducer,
 		api: persistedReducer
 	},
-	middleware: getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)
+	middleware: getDefaultMiddleware =>
+		getDefaultMiddleware({
+			serializableCheck: false
+		}).concat(api.middleware)
 });
 
 // Create a persistor to persist the store
