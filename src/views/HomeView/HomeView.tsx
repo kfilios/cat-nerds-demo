@@ -2,9 +2,51 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { useGetItemByIdQuery, useGetItemsQuery } from "api";
-import { selectLoadDataOnInit } from "store/settingsSlice";
+import { selectGridSize, selectLoadDataOnInit } from "store/settingsSlice";
 import { extractRtkError } from "utils";
 import { Button, DisplayError, Loading, Modal } from "components";
+
+function getSplittedData(arr: string[], chunkCount: number): string[][] {
+  const result: string[][] = [];
+  const chunkSize = Math.floor(arr.length / chunkCount);
+  let currentIndex = 0;
+
+  for (let i = 0; i < chunkCount; i++) {
+    const chunk = arr.slice(currentIndex, currentIndex + chunkSize);
+    result.push(chunk);
+    currentIndex += chunkSize;
+  }
+
+  return result;
+}
+
+interface Props {
+  images: string[];
+}
+
+const ImageGrid = ({ images }: Props) => {
+  const gridSize = useSelector(selectGridSize);
+
+  const renderColumns = (columnCount: number) => {
+    const splittedData = getSplittedData(images, gridSize);
+    const columns = [];
+    for (let i = 0; i < columnCount; i++) {
+      columns.push(
+        <div
+          key={i}
+          className={`flex flex-col gap-4 ${gridSize > 1 ? "w-2/4" : ""}`}
+        >
+          {splittedData[i].map((src) => (
+            <img src={src} alt="" className="w-full" />
+          ))}
+        </div>,
+      );
+    }
+    return columns;
+  };
+
+  return <div className="flex gap-4">{renderColumns(gridSize)}</div>;
+};
 
 function HomeView() {
   const { data, error, isLoading, refetch } = useGetItemsQuery();
@@ -44,14 +86,6 @@ function HomeView() {
       <h1 className="text-3xl font-bold text-rose-400">Hello to cat nerds!</h1>
       <p>Cat 9hb is:</p>
       <p>{cat?.url}</p>
-      <p>Items:</p>
-      <ul>
-        {data.map((item) => (
-          <li key={item.id}>
-            {item.id} - {item.url}
-          </li>
-        ))}
-      </ul>
       <Button onClick={openModal}>Open modal</Button>
       <Modal onClose={closeModal} open={open}>
         <Modal.Title>Modal title</Modal.Title>
@@ -62,6 +96,7 @@ function HomeView() {
           <Button onClick={closeModal}>Got it, thanks!</Button>
         </Modal.ButtonArea>
       </Modal>
+      <ImageGrid images={data.map(({ url }) => url)} />
     </>
   );
 }
