@@ -1,67 +1,31 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { useGetItemByIdQuery, useGetItemsQuery } from "api";
-import { selectGridSize, selectLoadDataOnInit } from "store/settingsSlice";
+import { useGetRandomCatsQuery } from "api";
+import { selectLoadDataOnInit } from "store/settingsSlice";
 import { extractRtkError } from "utils";
-import { Button, DisplayError, Loading, Modal } from "components";
-
-function getSplittedData(arr: string[], chunkCount: number): string[][] {
-  const result: string[][] = [];
-  const chunkSize = Math.floor(arr.length / chunkCount);
-  let currentIndex = 0;
-
-  for (let i = 0; i < chunkCount; i++) {
-    const chunk = arr.slice(currentIndex, currentIndex + chunkSize);
-    result.push(chunk);
-    currentIndex += chunkSize;
-  }
-
-  return result;
-}
-
-interface Props {
-  images: string[];
-}
-
-const ImageGrid = ({ images }: Props) => {
-  const gridSize = useSelector(selectGridSize);
-
-  const renderColumns = (columnCount: number) => {
-    const splittedData = getSplittedData(images, gridSize);
-    const columns = [];
-    for (let i = 0; i < columnCount; i++) {
-      columns.push(
-        <div
-          key={i}
-          className={`flex flex-col gap-4 ${gridSize > 1 ? "w-2/4" : ""}`}
-        >
-          {splittedData[i].map((src) => (
-            <img src={src} alt="" className="w-full" />
-          ))}
-        </div>,
-      );
-    }
-    return columns;
-  };
-
-  return <div className="flex gap-4">{renderColumns(gridSize)}</div>;
-};
+import { DisplayError, Loading, Modal } from "components";
+import BreedInfoModal from "./BreedInfoModal";
+import ImageGrid from "./ImageGrid";
 
 function HomeView() {
-  const { data, error, isLoading, refetch } = useGetItemsQuery();
-  const { data: cat } = useGetItemByIdQuery("9hb");
+  const { catId } = useParams();
+  const navigate = useNavigate();
+  const {
+    data: catItems,
+    error: catItemsError,
+    isLoading: isCatItemsLoading,
+    refetch,
+  } = useGetRandomCatsQuery();
 
   const loadDataOnInit = useSelector(selectLoadDataOnInit);
 
-  let [open, setOpen] = useState(false);
+  let [modalOpen, setModalOpen] = useState(false);
 
   function closeModal() {
-    setOpen(false);
-  }
-
-  function openModal() {
-    setOpen(true);
+    navigate("/");
+    setModalOpen(false);
   }
 
   useEffect(() => {
@@ -69,34 +33,33 @@ function HomeView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (catId) setModalOpen(true);
+    else setModalOpen(false);
+  }, [catId]);
+
+  if (isCatItemsLoading) {
     return <Loading />;
   }
 
-  if (error) {
-    return <DisplayError>{extractRtkError(error)}</DisplayError>;
+  if (catItemsError) {
+    return <DisplayError>{extractRtkError(catItemsError)}</DisplayError>;
   }
 
-  if (!data) {
+  if (!catItems) {
     return <div>No data found.</div>;
   }
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-rose-400">Hello to cat nerds!</h1>
-      <p>Cat 9hb is:</p>
-      <p>{cat?.url}</p>
-      <Button onClick={openModal}>Open modal</Button>
-      <Modal onClose={closeModal} open={open}>
-        <Modal.Title>Modal title</Modal.Title>
-        <Modal.Content>
-          This is a notification that we will use later on!
-        </Modal.Content>
-        <Modal.ButtonArea>
-          <Button onClick={closeModal}>Got it, thanks!</Button>
-        </Modal.ButtonArea>
+      <h1 className="mb-4 text-3xl font-bold text-rose-400">
+        Hello to cat nerds!
+      </h1>
+      <p className="mb-2">Click on an image below to get more info.</p>
+      <Modal onClose={closeModal} open={modalOpen}>
+        <BreedInfoModal catId={catId ?? ""} closeModal={closeModal} />
       </Modal>
-      <ImageGrid images={data.map(({ url }) => url)} />
+      <ImageGrid items={catItems} />
     </>
   );
 }

@@ -27,6 +27,10 @@ const router = createBrowserRouter([
         element: <HomeView />,
       },
       {
+        path: "/cat/:catId",
+        element: <HomeView />,
+      },
+      {
         path: "/breeds",
         element: <BreedsView />,
       },
