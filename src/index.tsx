@@ -13,7 +13,7 @@ import {
   BreedsView,
   HomeView,
   FavouritesView,
-} from "Views";
+} from "views";
 import { ErrorBoundary } from "components";
 
 const router = createBrowserRouter([
