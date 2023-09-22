@@ -35,6 +35,10 @@ const router = createBrowserRouter([
         element: <BreedsView />,
       },
       {
+        path: "/breed/:breedId",
+        element: <BreedsView />,
+      },
+      {
         path: "/favourites",
         element: <FavouritesView />,
       },

@@ -5,19 +5,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetRandomCatsQuery } from "api";
 import { selectLoadDataOnInit } from "store/settingsSlice";
 import { extractRtkError } from "utils";
-import { DisplayError, Loading, Modal } from "components";
+import { DisplayError, ImageGrid, Loading, Modal } from "components";
 import BreedInfoModal from "./BreedInfoModal";
-import ImageGrid from "./ImageGrid";
 
 function HomeView() {
   const { catId } = useParams();
   const navigate = useNavigate();
-  const {
-    data: catItems,
-    error: catItemsError,
-    isLoading: isCatItemsLoading,
-    refetch,
-  } = useGetRandomCatsQuery();
+  const { data, error, isLoading, refetch } = useGetRandomCatsQuery();
 
   const loadDataOnInit = useSelector(selectLoadDataOnInit);
 
@@ -38,15 +32,15 @@ function HomeView() {
     else setModalOpen(false);
   }, [catId]);
 
-  if (isCatItemsLoading) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  if (catItemsError) {
-    return <DisplayError>{extractRtkError(catItemsError)}</DisplayError>;
+  if (error) {
+    return <DisplayError>{extractRtkError(error)}</DisplayError>;
   }
 
-  if (!catItems) {
+  if (!data) {
     return <div>No data found.</div>;
   }
 
@@ -59,7 +53,7 @@ function HomeView() {
       <Modal onClose={closeModal} open={modalOpen}>
         <BreedInfoModal catId={catId ?? ""} closeModal={closeModal} />
       </Modal>
-      <ImageGrid items={catItems} />
+      <ImageGrid items={data} />
     </>
   );
 }

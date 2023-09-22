@@ -1,6 +1,5 @@
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { SerializedError } from "@reduxjs/toolkit";
-import { CatListItem } from "types";
 
 export const extractRtkError = (
   error: FetchBaseQueryError | SerializedError | undefined,
@@ -17,10 +16,10 @@ export const extractRtkError = (
 };
 
 export const splitItemsToColumns = (
-  arr: CatListItem[],
+  arr: any[],
   chunkCount: number,
-): CatListItem[][] => {
-  const result: CatListItem[][] = [];
+): any[][] => {
+  const result: any[][] = [];
   const chunkSize = Math.floor(arr.length / chunkCount);
   let currentIndex = 0;
 

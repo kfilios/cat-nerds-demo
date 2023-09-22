@@ -4,12 +4,12 @@ import { useGetCatByIdQuery } from "api";
 import { Button, Modal } from "components";
 import { extractRtkError } from "utils";
 
-interface BreedInfoModalProps {
+interface Props {
   catId: string;
   closeModal?: () => void;
 }
 
-const BreedInfoModal = ({ catId, closeModal }: BreedInfoModalProps) => {
+const BreedInfoModal = ({ catId, closeModal }: Props) => {
   const catIdRef = useRef(catId);
   const { data, error, isLoading } = useGetCatByIdQuery(
     catIdRef?.current ?? "",
@@ -17,12 +17,13 @@ const BreedInfoModal = ({ catId, closeModal }: BreedInfoModalProps) => {
 
   useEffect(() => {
     if (!catIdRef?.current) catIdRef.current = catId;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [catId]);
 
   return (
     <>
-      <Modal.Title>Modal title</Modal.Title>
+      {data?.breeds?.[0]?.name && (
+        <Modal.Title>{data?.breeds?.[0]?.name}</Modal.Title>
+      )}
       <Modal.Content>
         <p className="text-red-600">{error && extractRtkError(error)}</p>
         {isLoading ? (
@@ -30,7 +31,11 @@ const BreedInfoModal = ({ catId, closeModal }: BreedInfoModalProps) => {
         ) : (
           <>
             <img src={data?.url} alt="" className="w-full" />
-            <p className="mt-2">{data?.breeds?.[0]?.description}</p>
+            <p className="mt-2">
+              {data?.breeds?.[0]?.description
+                ? data?.breeds?.[0]?.description
+                : "There is no breed info for this cutie."}
+            </p>
           </>
         )}
       </Modal.Content>

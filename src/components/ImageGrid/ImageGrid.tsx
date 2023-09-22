@@ -1,13 +1,13 @@
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import ImageButton from "components/ImageButton/ImageButton";
+import { ImageButton } from "components";
 import { selectGridSize } from "store/settingsSlice";
-import { CatListItem } from "types";
+import { CatListItem, FilteredByBreed } from "types";
 import { splitItemsToColumns } from "utils";
 
 interface Props {
-  items: CatListItem[];
+  items: (CatListItem | FilteredByBreed)[];
 }
 
 const ImageGrid = ({ items }: Props) => {
@@ -15,10 +15,11 @@ const ImageGrid = ({ items }: Props) => {
 
   const gridSize = useSelector(selectGridSize);
 
-  const renderColumns = (columnCount: number) => {
-    const splittedData = splitItemsToColumns(items, gridSize);
+  const renderColumns = () => {
+    const splittedData =
+      items.length > 1 ? splitItemsToColumns(items, gridSize) : [items];
     const columns = [];
-    for (let i = 0; i < columnCount; i++) {
+    for (let i = 0; i < splittedData.length; i++) {
       columns.push(
         <div
           key={i}
@@ -37,7 +38,7 @@ const ImageGrid = ({ items }: Props) => {
     return columns;
   };
 
-  return <div className="flex gap-4">{renderColumns(gridSize)}</div>;
+  return <div className="flex gap-4">{renderColumns()}</div>;
 };
 
 export default ImageGrid;

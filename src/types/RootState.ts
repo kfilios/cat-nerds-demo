@@ -3,6 +3,7 @@ type RootState = {
     theme: string;
     loadDataOnInit: boolean;
     gridSize: number;
+    stickyNavbar: boolean;
   };
 };
 

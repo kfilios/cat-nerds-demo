@@ -3,19 +3,31 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "images/logo.svg";
 import { Dropdown } from "components";
 import { ReactNode } from "react";
+import { useSelector } from "react-redux";
+import { selectStickyNavbar } from "store/settingsSlice";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
+  const stickyNavbar = useSelector(selectStickyNavbar);
+
   return (
-    <nav className="w-full">
+    <nav
+      className={`w-full bg-slate-800 ${
+        stickyNavbar ? "sticky top-0 z-10" : ""
+      }`}
+    >
       <div className="mx-auto max-w-7xl px-8">
         <div className="flex items-center justify-between py-2">
           {/* Left side of navbar with logo */}
           <div className="flex items-center">
             {/* Logo */}
-            <Link to="/">
-              <img src={logo} className="mr-8 w-16" alt="logo" />
+            <Link to="/" className="group overflow-hidden transition-transform">
+              <img
+                src={logo}
+                className="w-16 transform transition-transform duration-500 ease-in-out group-hover:scale-110"
+                alt="logo"
+              />
             </Link>
             {/* Mobile menu button */}
             <div className="sm:hidden">
@@ -36,7 +48,7 @@ const Navbar = () => {
               </button>
             </div>
             {/* Desktop menu buttons */}
-            <div className="hidden space-x-8 sm:flex">
+            <div className="ml-8 hidden space-x-8 sm:flex">
               <Navbar.Button to="/breeds">Breeds</Navbar.Button>
               <Navbar.Button to="/favourites">Favourites</Navbar.Button>
             </div>

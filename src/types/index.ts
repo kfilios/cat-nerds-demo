@@ -8,7 +8,14 @@ export interface CatListItem {
 }
 
 export interface Breed {
+  id?: string;
+  name?: string;
   description?: string;
+}
+
+export interface FilteredByBreed {
+  id?: string;
+  url?: string;
 }
 
 export interface CatItem {
