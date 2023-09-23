@@ -31,3 +31,17 @@ export const splitItemsToColumns = (
 
   return result;
 };
+
+export const uniqBy = <T>(array: T[], attribute: keyof T): T[] => {
+  const uniqueAttributes = Array.from(
+    new Set(array.map((item) => item[attribute])),
+  );
+
+  const uniqueItems = uniqueAttributes.map(
+    (attr) => array.find((item) => item[attribute] === attr)!,
+  );
+
+  return uniqueItems;
+};
+
+export * from "./debounce";

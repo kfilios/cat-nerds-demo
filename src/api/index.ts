@@ -18,8 +18,9 @@ const headers = {
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
   endpoints: (builder) => ({
-    getRandomCats: builder.query<Array<CatListItem>, void>({
-      query: () => `images/search?order=RAND&limit=10&api_key=${API_KEY}`,
+    getRandomCats: builder.query<Array<CatListItem>, { page: number }>({
+      query: ({ page }) =>
+        `images/search?order=RAND&limit=10&page${page ?? 0}&api_key=${API_KEY}`,
     }),
     getCatById: builder.query<CatItem, string>({
       query: (itemId) => `images/${itemId}`,
