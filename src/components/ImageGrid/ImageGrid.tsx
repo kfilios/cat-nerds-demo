@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 
 import { ImageButton } from "components";
 import { selectGridSize } from "store/settingsSlice";
-import { CatListItem, FilteredByBreed } from "types";
+import { CatListItem, FilteredByBreed, FilteredByFavourites } from "types";
 import { splitItemsToColumns } from "utils";
 
 interface Props {
-  items: (CatListItem | FilteredByBreed)[];
+  items: (CatListItem | FilteredByBreed | FilteredByFavourites)[];
 }
 
 const ImageGrid = ({ items }: Props) => {

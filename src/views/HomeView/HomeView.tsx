@@ -50,7 +50,7 @@ function HomeView() {
         Hello to cat nerds!
       </h1>
       <p className="mb-2">Click on an image below to get more info.</p>
-      <Modal onClose={closeModal} open={modalOpen}>
+      <Modal onClose={closeModal} open={modalOpen} width="max-w-4xl">
         <BreedInfoModal catId={catId ?? ""} closeModal={closeModal} />
       </Modal>
       <ImageGrid items={data} />

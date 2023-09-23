@@ -84,11 +84,16 @@ Modal.Content = ({ children }: ContentProps) => {
 };
 
 interface ButtonAreaProps {
+  spaceBetween?: boolean;
   children: ReactNode;
 }
 
-Modal.ButtonArea = ({ children }: ButtonAreaProps) => {
-  return <div className="mt-4 flex gap-2">{children}</div>;
+Modal.ButtonArea = ({ spaceBetween, children }: ButtonAreaProps) => {
+  return (
+    <div className={`mt-4 flex gap-2 ${spaceBetween ? "justify-between" : ""}`}>
+      {children}
+    </div>
+  );
 };
 
 export default Modal;

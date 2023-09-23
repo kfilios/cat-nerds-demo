@@ -18,6 +18,17 @@ export interface FilteredByBreed {
   url?: string;
 }
 
+export interface FilteredByFavouritesImage {
+  id?: string;
+  url?: string;
+}
+
+export interface FilteredByFavourites {
+  id?: string;
+  image_id?: string;
+  image: FilteredByFavouritesImage;
+}
+
 export interface CatItem {
   id: string;
   url: string;

@@ -28,7 +28,7 @@ interface ButtonProps {
 
 Dropdown.Button = ({ onClick, children }: ButtonProps) => {
   return (
-    <Button noRound onClick={onClick}>
+    <Button className="rounded-none" onClick={onClick}>
       {children}
     </Button>
   );
