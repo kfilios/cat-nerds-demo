@@ -19,3 +19,7 @@ Starts Jest.
 ### `npm run build`
 
 Builds the app for production to the `build` folder.
+
+### `npm run start-tailwind`
+
+Start Tailwind server.
